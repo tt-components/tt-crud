@@ -6,21 +6,21 @@
 <polymer-element name="tt-crud-server" hidden attributes="entityid data index">
   <template>
 
-    <core-ajax id="service_get" url="/s/{{index}}/{{entityid}}" handleAs="json"
+    <core-ajax id="serviceGet" url="/s/{{index}}/{{entityid}}" handleAs="json"
                contentType="application/json"
                response="{{data}}"
                method="GET"
                on-core-error="{{handleGetError}}"
                on-core-response="{{handleGetResponse}}">
     </core-ajax>
-    <core-ajax id="service_save" url="/s/{{index}}/{{entityid}}" handleAs="json"
+    <core-ajax id="serviceSave" url="/s/{{index}}/{{entityid}}" handleAs="json"
                contentType="application/json"
                body="{{dataToSaveString}}"
                method="{{serviceSaveVerb}}"
                on-core-error="{{handleSaveError}}"
                on-core-response="{{handleSaveResponse}}">
     </core-ajax>
-    <core-ajax id="service_delete" url="/s/{{index}}/{{entityid}}" handleAs="json"
+    <core-ajax id="serviceDelete" url="/s/{{index}}/{{entityid}}" handleAs="json"
                contentType="application/json"
                body="{{dataToDeleteString}}"
                method="DELETE"
@@ -43,7 +43,7 @@
       // --- ---------------------
 
       entityGet: function () {
-        this.$.service_get.go();
+        this.$.serviceGet.go();
       },
 
 
@@ -68,7 +68,7 @@
         console.log('************ entityCreate datastring', this.dataToSaveString);
         console.log('Request Create of ', opt);
         this.serviceSaveVerb = 'POST';
-        this.$.service_save.go();
+        this.$.serviceSave.go();
       },
 
 
@@ -85,7 +85,7 @@
         this.dataToSaveString = JSON.stringify(opt);
         console.log('Request Save of ', opt);
         this.serviceSaveVerb = 'PUT';
-        this.$.service_save.go();
+        this.$.serviceSave.go();
       },
 
       // --- Entity Delete
@@ -97,7 +97,7 @@
         this.dataToDeleteString = JSON.stringify(opt);
         console.log('Request Delete of ', opt);
 
-        this.$.service_delete.go();
+        this.$.serviceDelete.go();
       },
 
       // --- Get Event

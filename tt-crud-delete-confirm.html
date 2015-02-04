@@ -7,7 +7,7 @@
 <polymer-element name="tt-crud-delete-confirm" attributes="">
 
   <template>
-    <paper-action-dialog  id="dialog_delete_confirm" heading="Delete" transition="paper-dialog-transition-bottom">
+    <paper-action-dialog  id="dialogDeleteConfirm" heading="Delete" transition="paper-dialog-transition-bottom">
       <p>Confirm deletion of entity</p>
       <paper-button on-tap="{{handeDeleteCancel}}" dismissive>Cancel</paper-button>
       <paper-button on-tap="{{handeDeleteConfirm}}" affirmative default>OK</paper-button>
@@ -20,15 +20,15 @@
     Polymer('tt-crud-delete-confirm', {
 
       show: function () {
-        this.$.dialog_delete_confirm.toggle();
+        this.$.dialogDeleteConfirm.toggle();
 
       },
       handeDeleteCancel: function () {
-        this.$.dialog_delete_confirm.toggle();
+        this.$.dialogDeleteConfirm.toggle();
         this.fire('delete-cancel');
       },
       handeDeleteConfirm: function () {
-        this.$.dialog_delete_confirm.toggle();
+        this.$.dialogDeleteConfirm.toggle();
         this.fire('delete-confirm');
       }
 

@@ -53,10 +53,10 @@
       var that = this;
       var inputFieldNodes = Array.prototype.reduce.call(childNodes, function (acc, childNode) {
       // var childTagName = childNode.tagName;
-        if (typeof childNode['checkValidity'] === 'function') {
+        if (typeof childNode.checkValidity === 'function') {
           // console.log("childNode", childNode);
           acc.push(childNode);
-        } else if (typeof childNode['validate'] === 'function') {
+        } else if (typeof childNode.validate === 'function') {
 //            console.log("childNode", childNode);
           acc.push(childNode);
         } else if ((childNode.childNodes !== undefined) && (childNode.childNodes.length > 0)) {

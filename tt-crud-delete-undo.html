@@ -13,7 +13,7 @@
         color: #eeff41;
       }
     </style>
-    <paper-toast id="toast_delete_undo" class="capsule" text="Delete"
+    <paper-toast id="toastDeleteUndo" class="capsule" text="Delete"
                  on-core-overlay-close-completed="{{handleDeleteUndoNone}}">
       <div class="toast-undo" on-tap="{{handleDeleteUndo}}">   <core-icon icon="undo"></core-icon> Undo</div>
     </paper-toast>
@@ -28,7 +28,7 @@
 
       show: function () {
         this.deleteAction = true;
-        this.$.toast_delete_undo.show();
+        this.$.toastDeleteUndo.show();
       },
       handleDeleteUndoNone: function () {
         if (this.deleteAction) {
@@ -37,7 +37,7 @@
       },
       handleDeleteUndo: function () {
         this.deleteAction = false;
-        this.$.toast_delete_undo.dismiss();
+        this.$.toastDeleteUndo.dismiss();
         this.fire('delete-cancel');
       }
 
