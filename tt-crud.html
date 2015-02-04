@@ -103,7 +103,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
                     entityid="{{entityid}}" data="{{data}}" index="{{index}}">
     </tt-crud-server>
 
-    <tt-crud-conflictresolution id="conflict_resolution" data="{{data}}"
+    <tt-crud-conflictresolution id="conflictResolution" data="{{data}}"
                                 dataOri="{{dataOri}}"></tt-crud-conflictresolution>
 
     <core-style ref="tt-group-edit"></core-style>
@@ -274,8 +274,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
         }
 
         // Resolve conflict is Needed
-        if (this.$.conflict_resolution && this.$.conflict_resolution.isCurrentConflict()) {
-          var userDiff = this.$.conflict_resolution.mergeConflict();
+        if (this.$.conflictResolution && this.$.conflictResolution.isCurrentConflict()) {
+          var userDiff = this.$.conflictResolution.mergeConflict();
           if (userDiff.userDiffConflict) {
             // TODO Real Conflict without resolution ??
           }
@@ -408,8 +408,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // --- Conflict Resolution
       // --- ---------------------
       resolveConflict: function () {
-        if (this.$.conflict_resolution) {
-          this.$.conflict_resolution.markToConflictToBeResolve();
+        if (this.$.conflictResolution) {
+          this.$.conflictResolution.markToConflictToBeResolve();
         }
         this.entityGet();
       },
