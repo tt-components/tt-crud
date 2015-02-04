@@ -49,8 +49,7 @@
       // http://sinonjs.org/docs/#respond
       test('entity-get should be fired on success', function (done) {
          server.respondWith("GET", "/s/users/AAApkZAAOAAARQYABN",
-          [200, { "Content-Type": "application/json" },
-            '[{ "id": 12, "comment": "Hey there" }]']);
+          [200, { "Content-Type": "application/json" }, body]);
 
         var responded = false;
         myEl.addEventListener('entity-get', function () {
