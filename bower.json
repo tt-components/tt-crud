@@ -8,6 +8,11 @@
     "crud"
   ],
   "main": "tt-crud.html",
+  "ignore": [ 
+	"index.html", "demo.html",
+	".jshintrc", ".editorconfig", ".bowerrc", ".git*", 
+	"test/*"
+   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^0.5.4"
   },
