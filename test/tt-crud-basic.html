@@ -29,31 +29,13 @@
   var myEl = document.getElementById('fixture');
 
   suite('<tt-crud>', function () {
-    var xhr, requests, ajax;
+    var server;
     var headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      "Content-Length": 140
+      "Content-Type": "application/json; charset=utf-8"
     };
-    var body = {
-        "_index": "users",
-        "_type": "user",
-        "_id": "AAApkZAAOAAARQYABN",
-        "_version": 1,
-        "found": true,
-        "_source": {"lastname": "ABBATI", "firstname": "CHARLES"}
-      };
+    var body = '{"_index":"users","_type":"user","_id":"AAApkZAAOAAARQYABN","_version":1,"found":true,"_source":{"lastname":"ABBATI","firstname":"CHARLES"}}';
     suiteSetup(function () {
-      xhr = sinon.useFakeXMLHttpRequest();
-      ajax = document.querySelector("tt-crud");
-      xhr.onCreate = function (xhr) {
-        requests.push(xhr);
-      };
-      // Reset the core-ajax element before each test.
-      ajax.auto = false;
-      ajax.url = '';
-      ajax.params = '';
-      ajax.handleAs = 'text';
-      ajax.body = '';
+      server = sinon.fakeServer.create();
     });
     setup(function () {
       requests = [];
@@ -64,15 +46,25 @@
         assert.equal(myEl.index, 'users');
         assert.equal(myEl.isAutosave, true);
       });
+      // http://sinonjs.org/docs/#respond
       test('entity-get should be fired on success', function (done) {
+         server.respondWith("GET", "/s/users/AAApkZAAOAAARQYABN",
+          [200, { "Content-Type": "application/json" },
+            '[{ "id": 12, "comment": "Hey there" }]']);
+
         var responded = false;
-        window.addEventListener('entity-get', function () {
-          responded = true;
+        myEl.addEventListener('entity-get', function () {
+           responded = true;
+          done();
         });
+        var callback = sinon.spy();
         myEl.setAttribute('entityid', 'AAApkZAAOAAARQYABN');
-        requests[0].respond(200, headers, body);
-        assert.isTrue(responded);
-        done();
+       // requests[0].respond(200, headers, body);
+         server.respond();
+       // assert.isTrue(responded);
+
+
+
       });
     });
 
