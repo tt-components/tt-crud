@@ -186,7 +186,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // --- Initial State
       // --- ---------------------
       unsetEntity: function () {
-        this.entityid === null;
+        this.entityid = null;
       },
 
       // --- Data Observer
@@ -330,7 +330,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 
 
-      handleSaveResponse: function (event, detail, target) {
+      handleSaveResponse: function (event, detail) {
         var status = detail.status;
         var resp = detail.response;
         console.log('Save response', status, ':', resp);
@@ -364,7 +364,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       },
 
-      handleSaveError: function (event, detail, target) {
+      handleSaveError: function (event, detail) {
         // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
         console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
         var resp = detail.response;
@@ -392,14 +392,15 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       // --- Entity Delete
       // --- ---------------------
-      handleDeleteResponse: function (event, detail, target) {
+      handleDeleteResponse: function (event, detail) {
         var resp = detail.response;
         var status = detail.status;
         this.unsetEntity();
         this.fire('delete', this.entity);
       },
-      handleDeleteError: function (event, detail, target) {
 
+      handleDeleteError: function (event, detail, target) {
+        this.showSaveErrorMessage('Error deleting Entity');
       },
 
 
@@ -483,7 +484,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       // --- AutoSave
       // --- ---------------------
-      addInputWatcher: function (focusAction, blurAction) {
+      addInputWatcher: function () {
         var childNodes = this.getFornInputField(this.$.content.getDistributedNodes());
         var that = this;
         console.log('---------- addInputWatcher', childNodes);
