@@ -1,4 +1,4 @@
-<link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 
 <link rel="import" href="tt-crud-utils.html">
 
@@ -23,7 +23,7 @@
 
       configValidators: function (errorCallback) {
         var childNodes = this.getFornInputField(this.target.getDistributedNodes());
-        console.log("configValidators Nodes of ", childNodes);
+        console.log('configValidators Nodes of ', childNodes);
         var that = this;
         var errorNodes = Array.prototype.filter.call(childNodes, function (childNode) {
           var node = childNode;
@@ -57,7 +57,7 @@
         // Validator config
         var rules = this.getValidatorRule(path);
         if (rules) {
-          Array.prototype.forEach.call(rules, function (rule, index) {
+          Array.prototype.forEach.call(rules, function (rule) {
             this.applyValidationRule(node, rule);
           });
         }
@@ -69,7 +69,7 @@
             console.log('Apply Validation Rule ', rule,   'on', node);
             break;
           default :
-            console.log("No validation rule for ", rule,   'on', node);
+            console.log('No validation rule for ', rule,   'on', node);
         }
       }
 

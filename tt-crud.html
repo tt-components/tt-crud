@@ -60,16 +60,16 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 
 
-<link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 
-<link rel="import" href="../../components/core-style/core-style.html">
+<link rel="import" href="../core-style/core-style.html">
 
 
-<link rel="import" href="../../components/core-icon/core-icon.html">
+<link rel="import" href="../core-icon/core-icon.html">
 
- <link rel="import" href="../../components/paper-toast/paper-toast.html">
+ <link rel="import" href="../paper-toast/paper-toast.html">
 
-<link rel="import" href="../../components/paper-button/paper-button.html">
+<link rel="import" href="../paper-button/paper-button.html">
 
 
 <link rel="import" href="tt-crud-server.html">
@@ -193,10 +193,10 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // --- ---------------------
 
       dataSnapshot: function () {
-//        console.log("***************************");
-//        console.log(" Data Changed to : ", this.data);
+//        console.log('***************************');
+//        console.log(' Data Changed to : ', this.data);
         this.dataOri = JSON.parse(JSON.stringify(this.data));
-//        console.log("***************************");
+//        console.log('***************************');
         // ------------------------------------------------------------------
         // FIXME : To Delete after resolved Issue https://github.com/Polymer/paper-input/issues/148
         // ------------------------------------------------------------------
@@ -207,20 +207,20 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       },
 
-      entityidChanged: function (oldValue, newValue) {
-//        console.log("entityidChanged : ", this.entityid);
-        //console.log("entityidChanged for ", this.entityid);
+      entityidChanged: function () {
+//        console.log('entityidChanged : ', this.entityid);
+        //console.log('entityidChanged for ', this.entityid);
         if (this.entityid === '' || this.entityid === null) {
           // Blank case, no model to create
           this.data = undefined;
         } else if (this.entityid === undefined) {
           // Create Model
           this.createEmptyEntity();
-          //  console.log("entityidChanged create empty data ", this.data);
+          //  console.log('entityidChanged create empty data ', this.data);
         } else if (!this.data || !this.data._id || this.data._id !== this.entityid) {
           // Update Mode
           this.entityGet();
-          //  console.log("entityidChanged load data ", this.entityid);
+          //  console.log('entityidChanged load data ', this.entityid);
         }
       },
 
@@ -239,7 +239,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 //        if (diff) {
 //            // TODO Show Popup
 //            //  this.$.toast_save_not_need.show();
-//            console.log("Diff detected, close refused !!!!")
+//            console.log('Diff detected, close refused !!!!')
 //        } else {
         this.unsetEntity();
         this.fire('cancel', this.entity);
@@ -247,12 +247,10 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
 
       onSaveButton: function () {
-        console.log("----------- Click on save");
         this.save();
       },
 
       onDeleteButton: function () {
-        console.log("----------- Click on save");
         //this.entityDelete();
         this.$.dialog_delete_confirm.show();
 //        this.$.toast_delete_undo.show();
@@ -264,8 +262,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
         this.$.server.entityGet();
       },
 
-      handleGetResponse: function (event, detail, target) {
-        console.log("handleGetResponse : ", detail);
+      handleGetResponse: function (event, detail) {
+        console.log('handleGetResponse : ', detail);
         // Data Snapshot
         this.dataSnapshot();
         // Enable menu
@@ -283,17 +281,17 @@ Fired when the `tt-crud`'s `get` the entity from server.
           }
         }
         // Fire Event
-        this.fire("entity-get", {
+        this.fire('entity-get', {
           response: detail.response,
           status: detail.status,
           statusText: detail.statusText
         });
       },
 
-      handleGetError: function (event, detail, target) {
-        console.log("handleGetError : ", detail);
+      handleGetError: function (event, detail) {
+        console.log('handleGetError : ', detail);
 
-        this.fire("entity-get-error", {
+        this.fire('entity-get-error', {
           response: detail.response,
           status: detail.status,
           statusText: detail.statusText
@@ -335,7 +333,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       handleSaveResponse: function (event, detail, target) {
         var status = detail.status;
         var resp = detail.response;
-        console.log("Save response", status, ":", resp);
+        console.log('Save response', status, ':', resp);
 
 
         // Check Existing id
@@ -347,11 +345,11 @@ Fired when the `tt-crud`'s `get` the entity from server.
         }
         // Increment version or reload data ?
         if (this.reloadOnSave === '' || this.reloadOnSave === true) {
-          console.log("Reload on save");
+          console.log('Reload on save');
           this.entityGet();
         } else {
           // Update version
-          console.log("Increment Version to ", resp._version, " for data", this.data);
+          console.log('Increment Version to ', resp._version, 'for data', this.data);
           this.data._version = resp._version;
           // Clone the version by wathcing  change on data._version
           // Data Snapshot
@@ -368,7 +366,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       handleSaveError: function (event, detail, target) {
         // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
-        console.log("Bug handleSaveError detail.response (Not JSON) : ", detail.response);
+        console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
         var resp = detail.response;
         var status = detail.status;
         console.log('Entity Save Error', status, ':', detail.statusText, ',', resp);
@@ -385,7 +383,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
           // Other Error
           this.showSaveErrorMessage('Entity Save Error ' + status + ' : ' + detail.statusText);
           // Fire Event
-          this.fire("entity-save-error", {
+          this.fire('entity-save-error', {
             response: resp,
             status: status
           });
@@ -446,39 +444,12 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 
 
-      getFornInputField: function (childNodes) {
-        childNodes = childNodes || this.$.content.getDistributedNodes();
-        // Bug ? https://github.com/Polymer/polymer/issues/414
-        // var childNodes = this.$.content.querySelectorAll('*');
-        // https://github.com/Polymer/paper-input/commit/255980d5400ef5aada1af87f1771d77c436f469e
-        // console.log("getFornInputField Nodes of ", childNodes);
-        var that = this;
-        var inputFieldNodes = Array.prototype.reduce.call(childNodes, function (acc, childNode) {
-          var childTagName = childNode.tagName;
-          if (typeof childNode['checkValidity'] === 'function') {
-            // console.log("childNode", childNode);
-            acc.push(childNode);
-          } else if (typeof childNode['validate'] === 'function') {
-//            console.log("childNode", childNode);
-            acc.push(childNode);
-          } else if ((childNode.childNodes !== undefined) && (childNode.childNodes.length > 0)) {
-            var subNodes = that.getFornInputField(childNode.childNodes);
-            if ((subNodes !== undefined) && (subNodes.length > 0)) {
-              Array.prototype.push.apply(acc, subNodes);
-            }
-          }
-          return acc;
-        }, []);
-
-        return inputFieldNodes;
-      },
-
 
       notifValidityErrors: function (errorNodes) {
         if (errorNodes && errorNodes.length > 0) {
           if (this.validateautofocus === '' || this.validateautofocus === true) {
             var errorNode = errorNodes[0];
-            console.log("request focus on ", errorNode.tagName, errorNode);
+            console.log('request focus on ', errorNode.tagName, errorNode);
             if ('PAPER-INPUT-DECORATOR' === errorNode.tagName) {
               if (errorNode && errorNode.input) {
                 errorNode.input.focus();
@@ -488,7 +459,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
             }
 
           }
-          this.showSaveErrorMessage("Error in validate Entity");
+          this.showSaveErrorMessage('Error in validate Entity');
         }
       },
 
@@ -506,7 +477,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       notifNotDiff: function (diff) {
         if (!diff) {
-          this.showSaveErrorMessage("Saved not needed.");
+          this.showSaveErrorMessage('Saved not needed.');
         }
       },
 
@@ -515,7 +486,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       addInputWatcher: function (focusAction, blurAction) {
         var childNodes = this.getFornInputField(this.$.content.getDistributedNodes());
         var that = this;
-        console.log("---------- addInputWatcher", childNodes);
+        console.log('---------- addInputWatcher', childNodes);
         this.focusListener = this.focusListener || this.autoSaveInputFieldFocus.bind(this);
         this.blurListener = this.blurAction || this.autoSaveInputFieldBlur.bind(this);
         childNodes.forEach(function (childNode) {
@@ -532,7 +503,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
       removeInputWatcher: function () {
         var childNodes = this.getFornInputField(this.$.content.getDistributedNodes());
-         console.log("---------- removeInputWatcher", childNodes);
+         console.log('---------- removeInputWatcher', childNodes);
         var that = this;
         childNodes.forEach(function (childNode) {
           Polymer.removeEventListener(childNode, 'blur', that.blurListener, true);
@@ -544,7 +515,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
 
       autoSaveInputFieldBlur: function (event) {
-//        console.log("*** Blur ", event);
+//        console.log('*** Blur ', event);
 //        var autosave = this.isModeCreate ? (this.autocreate === '' || this.autocreate === true) : ( this.autosave === '' || this.autosave === true );
         // Auto save
 //        console.log('---- autoSaveInputFieldBlur', this.data);
@@ -555,7 +526,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         }
       },
       autoSaveInputFieldFocus: function (event) {
-//        console.log("*** Focus ", event);
+//        console.log('*** Focus ', event);
         if (this.isAutosave) {
           this.isSaveEnabled = true;
         }

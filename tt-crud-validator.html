@@ -1,4 +1,4 @@
-<link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 
 <link rel="import" href="tt-crud-utils.html">
 
@@ -13,7 +13,7 @@
         Polymer('tt-crud-validator', Polymer.mixin({
           validateAll: function (errorCallback) {
             var childNodes = this.getFornInputField(this.target.getDistributedNodes());
-            console.log("checkValidity Nodes of ", childNodes);
+            console.log('checkValidity Nodes of ', childNodes);
 
             var errorNodes = Array.prototype.filter.call(childNodes, function (childNode) {
               if (typeof childNode['checkValidity'] === 'function') {
@@ -23,7 +23,7 @@
               }
               return false;
             });
-            //console.log("checkValidity Errors Nodes : ", errorNodes);
+            //console.log('checkValidity Errors Nodes : ', errorNodes);
             // Error Callback
             if (errorCallback) {
               errorCallback(errorNodes);

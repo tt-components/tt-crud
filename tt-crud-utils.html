@@ -15,7 +15,7 @@
           if (!this.isArrayEquals(first[attr], second[attr])) {
             diffs[attr] = second[attr];
           }
-        } else if (typeof first[attr] == 'object' && typeof second[attr] == 'object') { // Bug if property disapear
+        } else if (typeof first[attr] === 'object' && typeof second[attr] === 'object') { // Bug if property disapear
           // Check recursif
           var subDiffs = this.diffProperties(first[attr], second[attr], {});
           if (subDiffs) {
@@ -34,12 +34,12 @@
       if (a === b) {
         return true;
       }
-      var diff = a.filter(function (element, index, array) {
+      var diff = a.filter(function (element, index) {
         return a[index] !== b[index];
       });
       return diff.length() < 1;
     }
-  }
+  };
 
   var crudNodeWalkerMixin = {
     getFornInputField: function (childNodes) {
@@ -52,7 +52,7 @@
       // console.log("getFornInputField Nodes of ", childNodes);
       var that = this;
       var inputFieldNodes = Array.prototype.reduce.call(childNodes, function (acc, childNode) {
-        var childTagName = childNode.tagName;
+      // var childTagName = childNode.tagName;
         if (typeof childNode['checkValidity'] === 'function') {
           // console.log("childNode", childNode);
           acc.push(childNode);
@@ -70,5 +70,5 @@
 
       return inputFieldNodes;
     }
-  }
+  };
 </script>

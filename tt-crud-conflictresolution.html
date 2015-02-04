@@ -1,4 +1,4 @@
-<link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 
 <link  rel="import" href="tt-crud-utils.html">
 
@@ -21,10 +21,10 @@
       // --- ---------------------
 
       markToConflictToBeResolve: function () {
-        console.log("markToConflictToBeResolve -- BEGIN", this.data, this.dataOri)
+        console.log('markToConflictToBeResolve -- BEGIN', this.data, this.dataOri);
         this.dataUser = JSON.parse(JSON.stringify(this.data));
         this.dataOrigin = JSON.parse(JSON.stringify(this.dataOri));
-        console.log("markToConflictToBeResolve -- END")
+        console.log('markToConflictToBeResolve -- END');
       },
 
       isCurrentConflict: function () {
@@ -49,7 +49,7 @@
           // TODO Unmergeable Conflict
         }
         this.resetConflict();
-        console.log("---------- Conflict resolution END");
+        console.log('---------- Conflict resolution END');
         return userDiff;
       },
       /**
@@ -73,7 +73,7 @@
           userDiffMergeable: userDiffMergeable,
           userDiffConflict: userDiffConflict
         };
-        console.log("Diff User", result);
+        console.log('Diff User', result);
         return result;
       },
 
@@ -116,11 +116,11 @@
           return dest;
         }
         for (var attr in src) {
-          if (typeof src[attr] == 'object' && !Array.isArray(src[attr])) {
-            // console.log("copyProperties type : ", attr, " --> ", typeof src[attr], " / is Array "  , Array.isArray(src[attr]) );
+          if (typeof src[attr] === 'object' && !Array.isArray(src[attr])) {
+            // console.log('copyProperties type : ', attr, ' --> ', typeof src[attr], ' / is Array '  , Array.isArray(src[attr]) );
             if (override || !dest.hasOwnProperty(attr)) {
               var subDest = this.copyObjectAttributes(src[attr], dest[attr], override);
-              // console.log("sub dest", subDest);
+              // console.log('sub dest', subDest);
               dest[attr] = subDest;
             }
           } else if (src.hasOwnProperty(attr)) {

@@ -1,6 +1,6 @@
-<link rel="import" href="../../components/polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html">
 
-<link rel="import" href="../../components/core-ajax/core-ajax.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
 
 
 <polymer-element name="tt-crud-server" hidden attributes="entityid data index">
@@ -64,9 +64,9 @@
           body: this.data._source
         };
         this.dataToSaveString = JSON.stringify(opt);
-        console.log("************ entityCreate", this.data);
-        console.log("************ entityCreate datastring", this.dataToSaveString);
-        console.log("Request Create of ", opt);
+        console.log('************ entityCreate', this.data);
+        console.log('************ entityCreate datastring', this.dataToSaveString);
+        console.log('Request Create of ', opt);
         this.serviceSaveVerb = 'POST';
         this.$.service_save.go();
       },
@@ -83,7 +83,7 @@
           }
         };
         this.dataToSaveString = JSON.stringify(opt);
-        console.log("Request Save of ", opt);
+        console.log('Request Save of ', opt);
         this.serviceSaveVerb = 'PUT';
         this.$.service_save.go();
       },
@@ -95,7 +95,7 @@
           version: this.data._version
         };
         this.dataToDeleteString = JSON.stringify(opt);
-        console.log("Request Delete of ", opt);
+        console.log('Request Delete of ', opt);
 
         this.$.service_delete.go();
       },
@@ -103,25 +103,25 @@
       // --- Get Event
       // --- ---------------------
 
-      handleGetResponse: function (event, detail, target) {
+      handleGetResponse: function (event, detail) {
         var status = detail.xhr.status;
         var statusText = detail.xhr.statusText;
         // Fire Event
-        this.fire("get-response", {
+        this.fire('get-response', {
           response: detail.response,
           status: status,
           statusText: statusText
         });
       },
 
-      handleGetError: function (event, detail, target) {
+      handleGetError: function (event, detail) {
         // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
-        console.log("Bug handleSaveError detail.response (Not JSON) : ", detail.response);
+        console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
         var resp = JSON.parse(detail.xhr.response);
         var status = detail.xhr.status;
         var statusText = detail.xhr.statusText;
         // Fire Event
-        this.fire("get-error", {
+        this.fire('get-error', {
           response: resp,
           status: status,
           statusText: statusText
@@ -131,26 +131,26 @@
       // --- Save Event
       // --- ---------------------
 
-      handleSaveResponse: function (event, detail, target)  {
+      handleSaveResponse: function (event, detail)  {
         var status = detail.xhr.status;
         var statusText = detail.xhr.statusText;
-        console.log("Save response", status, ":",  detail.response);
+        console.log('Save response', status, ':',  detail.response);
         // Fire Event
-        this.fire("save-response", {
+        this.fire('save-response', {
           response:  detail.response,
           status: status,
           statusText: statusText
         });
       },
 
-      handleSaveError: function (event, detail, target) {
+      handleSaveError: function (event, detail) {
         // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
-        console.log("Bug handleSaveError detail.response (Not JSON) : ", detail.response);
+        console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
         var resp = JSON.parse(detail.xhr.response);
         var status = detail.xhr.status;
         var statusText = detail.xhr.statusText;
         // Fire Event
-        this.fire("save-error", {
+        this.fire('save-error', {
           response: resp,
           status: status,
           statusText: statusText
@@ -160,26 +160,26 @@
       // --- Delete Event
       // --- ---------------------
 
-      handleDeleteResponse: function (event, detail, target)  {
+      handleDeleteResponse: function (event, detail)  {
         var status = detail.xhr.status;
         var statusText = detail.xhr.statusText;
-        console.log("Delete response", status, ":",  detail.response);
+        console.log('Delete response', status, ':',  detail.response);
         // Fire Event
-        this.fire("delete-response", {
+        this.fire('delete-response', {
           response:  detail.response,
           status: status,
           statusText: statusText
         });
       },
 
-      handleDeleteError: function (event, detail, target) {
+      handleDeleteError: function (event, detail) {
         // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
-        console.log("Bug handleSaveError detail.response (Not JSON) : ", detail.response);
+        console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
         var resp = JSON.parse(detail.xhr.response);
         var status = detail.xhr.status;
         var statusText = detail.xhr.statusText;
         // Fire Event
-        this.fire("delete-error", {
+        this.fire('delete-error', {
           response: resp,
           status: status,
           statusText: statusText
