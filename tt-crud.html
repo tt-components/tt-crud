@@ -123,17 +123,17 @@ Fired when the `tt-crud`'s `get` the entity from server.
     </section>
 
 
-    <paper-toast id="toast_save_success" class="capsule" text="Entity Saved.">
+    <paper-toast id="toastSaveSuccess" class="capsule" text="Entity Saved.">
       <core-icon icon="done"></core-icon>
     </paper-toast>
-    <paper-toast id="toast_save_error" class="capsule toast-error" text="{{toastSaveErrorMessage}}">
+    <paper-toast id="toastSaveError" class="capsule toast-error" text="{{toastSaveErrorMessage}}">
       <core-icon icon="error"></core-icon>
     </paper-toast>
 
 
-    <!--<tt-crud-delete-confirm  id="dialog_delete_confirm" on-delete-confirm="{{entityDelete}}">-->
+    <!--<tt-crud-delete-confirm  id="dialogDeleteConfirm" on-delete-confirm="{{entityDelete}}">-->
     <!--</tt-crud-delete-confirm>-->
-    <tt-crud-delete-undo  id="dialog_delete_confirm" on-delete-confirm="{{entityDelete}}">
+    <tt-crud-delete-undo  id="dialogDeleteConfirm" on-delete-confirm="{{entityDelete}}">
     </tt-crud-delete-undo>
 
 
@@ -252,7 +252,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       onDeleteButton: function () {
         //this.entityDelete();
-        this.$.dialog_delete_confirm.show();
+        this.$.dialogDeleteConfirm.show();
 //        this.$.toast_delete_undo.show();
       },
       // --- Entity GET
@@ -360,7 +360,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
           this.isSaveEnabled = false;
         }
         // Show Notification
-        this.$.toast_save_success.show();
+        this.$.toastSaveSuccess.show();
 
       },
 
@@ -392,14 +392,14 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       // --- Entity Delete
       // --- ---------------------
-      handleDeleteResponse: function (event, detail) {
-        var resp = detail.response;
-        var status = detail.status;
+      handleDeleteResponse: function () {
+//        var resp = detail.response;
+//        var status = detail.status;
         this.unsetEntity();
         this.fire('delete', this.entity);
       },
 
-      handleDeleteError: function (event, detail, target) {
+      handleDeleteError: function () {
         this.showSaveErrorMessage('Error deleting Entity');
       },
 
@@ -455,7 +455,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
               if (errorNode && errorNode.input) {
                 errorNode.input.focus();
               }
-            } else if (typeof errorNode['focus'] === 'function') {
+            } else if (typeof errorNode.focus === 'function') {
               errorNode.focus();
             }
 
@@ -515,7 +515,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         this.blurListener = undefined;
       },
 
-      autoSaveInputFieldBlur: function (event) {
+      autoSaveInputFieldBlur: function () {
 //        console.log('*** Blur ', event);
 //        var autosave = this.isModeCreate ? (this.autocreate === '' || this.autocreate === true) : ( this.autosave === '' || this.autosave === true );
         // Auto save
@@ -526,7 +526,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
           }, 200);
         }
       },
-      autoSaveInputFieldFocus: function (event) {
+      autoSaveInputFieldFocus: function () {
 //        console.log('*** Focus ', event);
         if (this.isAutosave) {
           this.isSaveEnabled = true;
@@ -538,7 +538,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       showSaveErrorMessage: function (msg) {
         this.toastSaveErrorMessage = msg;
-        this.$.toast_save_error.show();
+        this.$.toastSaveError.show();
 
       }
 
