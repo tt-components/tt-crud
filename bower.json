@@ -1,0 +1,17 @@
+{
+  "name": "tt-crud",
+  "version": "0.0.1",
+  "keywords": [
+    "seed",
+    "polymer",
+    "web-components",
+    "crud"
+  ],
+  "main": "tt-crud.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.4"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.2.1"
+  }
+}
