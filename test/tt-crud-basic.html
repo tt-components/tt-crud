@@ -11,36 +11,74 @@
   <!-- Step 1: import the element to test -->
   <link rel="import" href="../tt-crud.html">
 
+  <!-- Step 1.1: import the element to test -->
+  <link rel="import" href="../../paper-input/paper-input-decorator.html">
+  <link rel="import" href="../../core-input/core-input.html">
+
 </head>
 <body>
 
-  <tt-crud id="fixture"></tt-crud>
+<tt-crud id="fixture" data="{{data}}" entityid="{{entityid}}" index="users" autosave>
+  <!-- Step 1: import the element to test -->
+  <paper-input-decorator floatingLabel label="First name" autoValidate>
+    <input is="core-input" value="{{ data._source.firstname}}" required>
+  </paper-input-decorator>
+</tt-crud>
 
-  <script>
-    var myEl = document.getElementById('fixture');
+<script>
+  var myEl = document.getElementById('fixture');
 
-    suite('<tt-crud>', function() {
-
-      test('defines the "author" property', function() {
-        assert.equal(myEl.author, 'Dimitri Glazkov');
-      });
-
-      test('says hello', function() {
-        assert.equal(myEl.sayHello(), 'tt-crud says, Hello World!');
-        var greetings = myEl.sayHello('greetings Earthlings');
-        assert.equal(greetings, 'tt-crud says, greetings Earthlings');
-      });
-
-      test('fires lasers', function(done) {
-        myEl.addEventListener('tt-crud-lasers-success', function(event) {
-          assert.equal(event.detail.sound, 'Pew pew pew!');
-          done();
-        });
-        myEl.fireLasers();
-      });
-
+  suite('<tt-crud>', function () {
+    var xhr, requests, ajax;
+    var headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Content-Length": 140
+    };
+    var body = {
+        "_index": "users",
+        "_type": "user",
+        "_id": "AAApkZAAOAAARQYABN",
+        "_version": 1,
+        "found": true,
+        "_source": {"lastname": "ABBATI", "firstname": "CHARLES"}
+      };
+    suiteSetup(function () {
+      xhr = sinon.useFakeXMLHttpRequest();
+      ajax = document.querySelector("tt-crud");
+      xhr.onCreate = function (xhr) {
+        requests.push(xhr);
+      };
+      // Reset the core-ajax element before each test.
+      ajax.auto = false;
+      ajax.url = '';
+      ajax.params = '';
+      ajax.handleAs = 'text';
+      ajax.body = '';
     });
-  </script>
+    setup(function () {
+      requests = [];
+    });
+
+    suite('handleAs', function () {
+      test('defines the "index" property', function () {
+        assert.equal(myEl.index, 'users');
+        assert.equal(myEl.isAutosave, true);
+      });
+      test('entity-get should be fired on success', function (done) {
+        var responded = false;
+        window.addEventListener('entity-get', function () {
+          responded = true;
+        });
+        myEl.setAttribute('entityid', 'AAApkZAAOAAARQYABN');
+        requests[0].respond(200, headers, body);
+        assert.isTrue(responded);
+        done();
+      });
+    });
+
+
+  });
+</script>
 
 </body>
 </html>
