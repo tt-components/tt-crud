@@ -8,17 +8,15 @@ var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 
 
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DEFAULT FOR 'gulp' COMMAND
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-gulp.task('default', [['clean', 'build-vulcanize', 'lint']], function() {
+gulp.task('default', [['clean', 'build-vulcanize', 'lint']], function () {
   console.log('default end.');
 });
 
 
-
-gulp.task('clean', function() {
+gulp.task('clean', function () {
   return gulp.src(['dist', 'build'], {read: false})
     .pipe(clean()); // Delete dist and build to allow for nice, clean files!
 });
@@ -27,7 +25,7 @@ gulp.task('clean', function() {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // BUILD TASKS
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-gulp.task('build-vulcanize', function() {
+gulp.task('build-vulcanize', function () {
   return gulp.src('tt-crud.html')
     // Concatenate Polymer web components into a single file (dist).
     .pipe(vulcanize({
@@ -39,13 +37,13 @@ gulp.task('build-vulcanize', function() {
       inline: false,
       csp: true,
       // Minify; remove comments.
-      strip: false
+      strip: true
     }))
     .pipe(gulp.dest('build'));
 });
 
 
-gulp.task('lint', function() {
+gulp.task('lint', function () {
   return gulp.src('*.html')
     .pipe(jshint.extract('auto'))
     .pipe(jshint())
@@ -56,8 +54,8 @@ gulp.task('lint', function() {
 // DIST TASKS
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-gulp.task('dist', function() {
-  gulp.task('dist-vulcanize', function() {
+gulp.task('dist', function () {
+  gulp.task('dist-vulcanize', function () {
     return gulp.src('tt-crud.html')
       // Concatenate Polymer web components into a single file (dist).
       .pipe(vulcanize({
