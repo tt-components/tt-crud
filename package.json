@@ -28,6 +28,7 @@
     "gulp-jshint": "^1.9.2",
     "gulp-run-seq": "^1.2.2",
     "gulp-vulcanize": "^5.0.0",
-    "jshint-stylish": "^1.0.0"
+    "jshint-stylish": "^1.0.0",
+    "web-component-tester": "^2.1.3"
   }
 }

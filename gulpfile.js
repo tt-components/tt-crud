@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 
 require('gulp-run-seq');
+require('web-component-tester').gulp.init(gulp);
 
 var clean = require('gulp-clean');
 var vulcanize = require('gulp-vulcanize');
@@ -15,11 +16,20 @@ gulp.task('default', [['clean', 'build-vulcanize', 'lint']], function () {
   console.log('default end.');
 });
 
+gulp.task('test', [['lint', 'test:local']], function () {
+  console.log('test end.');
+});
+
 
 gulp.task('clean', function () {
   return gulp.src(['dist', 'build'], {read: false})
     .pipe(clean()); // Delete dist and build to allow for nice, clean files!
 });
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Test TASKS
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
