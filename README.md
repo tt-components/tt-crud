@@ -8,3 +8,11 @@ We've put together a [guide for tt-crud](http://www.polymer-project.org/docs/sta
 
 ## Brief Overview
 
+
+## Develop and Test
+```
+$ cd ..  # You'll want to run the web server from the parent directory.
+$ python -m SimpleHTTPServer
+```
+This starts a web server on port 8000, so you can test your new element by navigating a browser to the URL localhost:8000/tt-crud/demo.html.
+
