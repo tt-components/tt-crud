@@ -11,36 +11,65 @@
   <!-- Step 1: import the element to test -->
   <link rel="import" href="../tt-crud.html">
 
+  <!-- Step 1.1: import the element to test -->
+  <link rel="import" href="../../paper-input/paper-input-decorator.html">
+  <link rel="import" href="../../core-input/core-input.html">
+
 </head>
 <body>
 
-  <tt-crud id="fixture"></tt-crud>
+<tt-crud id="fixture" data="{{data}}" entityid="{{entityid}}" index="users" autosave>
+  <!-- Step 1: import the element to test -->
+  <paper-input-decorator floatingLabel label="First name" autoValidate>
+    <input is="core-input" value="{{ data._source.firstname}}" required>
+  </paper-input-decorator>
+</tt-crud>
 
-  <script>
-    var myEl = document.getElementById('fixture');
+<script>
+  var myEl = document.getElementById('fixture');
 
-    suite('<tt-crud>', function() {
+  suite('<tt-crud>', function () {
+    var server;
+    var headers = {
+      "Content-Type": "application/json; charset=utf-8"
+    };
+    var body = '{"_index":"users","_type":"user","_id":"AAApkZAAOAAARQYABN","_version":1,"found":true,"_source":{"lastname":"ABBATI","firstname":"CHARLES"}}';
+    suiteSetup(function () {
+      server = sinon.fakeServer.create();
+    });
+    setup(function () {
+      requests = [];
+    });
 
-      test('defines the "author" property', function() {
-        assert.equal(myEl.author, 'Dimitri Glazkov');
+    suite('handleAs', function () {
+      test('defines the "index" property', function () {
+        assert.equal(myEl.index, 'users');
+        assert.equal(myEl.isAutosave, true);
       });
+      // http://sinonjs.org/docs/#respond
+      test('entity-get should be fired on success', function (done) {
+         server.respondWith("GET", "/s/users/AAApkZAAOAAARQYABN",
+          [200, { "Content-Type": "application/json" }, body]);
 
-      test('says hello', function() {
-        assert.equal(myEl.sayHello(), 'tt-crud says, Hello World!');
-        var greetings = myEl.sayHello('greetings Earthlings');
-        assert.equal(greetings, 'tt-crud says, greetings Earthlings');
-      });
-
-      test('fires lasers', function(done) {
-        myEl.addEventListener('tt-crud-lasers-success', function(event) {
-          assert.equal(event.detail.sound, 'Pew pew pew!');
+        var responded = false;
+        myEl.addEventListener('entity-get', function () {
+           responded = true;
           done();
         });
-        myEl.fireLasers();
-      });
+        var callback = sinon.spy();
+        myEl.setAttribute('entityid', 'AAApkZAAOAAARQYABN');
+       // requests[0].respond(200, headers, body);
+         server.respond();
+       // assert.isTrue(responded);
 
+
+
+      });
     });
-  </script>
+
+
+  });
+</script>
 
 </body>
 </html>
