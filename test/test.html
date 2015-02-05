@@ -1,0 +1,88 @@
+<!doctype html>
+<!--
+  Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+  This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+  The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+  The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+  Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+  -->
+  <html>
+  <head>
+  <title>core-ajax</title>
+
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+<script src="../../web-component-tester/browser.js"></script>
+
+<link rel="import" href="../../core-ajax/core-ajax.html">
+    <link rel="import" href="../tt-crud-server.html">
+
+</head>
+<body>
+<core-ajax></core-ajax>
+<tt-crud-server id="fixture"   index="users" ></tt-crud-server>
+<script>
+suite('core-ajax', function() {
+  var xhr, requests, ajax;
+  var myEl = document.getElementById('fixture');
+  suiteSetup(function() {
+    xhr = sinon.useFakeXMLHttpRequest();
+//    ajax = document.querySelector("core-ajax");
+    ajax = myEl;
+    xhr.onCreate = function (xhr) {
+      requests.push(xhr);
+    };
+    // Reset the core-ajax element before each test.
+//    ajax.auto = false;
+//    ajax.url = '';
+//    ajax.params = '';
+//    ajax.handleAs = 'text';
+//    ajax.body = '';
+  });
+  setup(function() {
+    requests = [];
+  });
+
+
+  suite('events', function(){
+    var headers = {
+      "Content-Type": "text/plain"
+    };
+    var body = "somebodytext";
+    var responded;
+    setup(function(done){
+      async.series([
+        function(cb){
+          ajax.auto = false;
+          cb();
+        },
+        animationFrameFlush,
+        function(cb){;
+//          ajax.handleAs = 'text';
+//          ajax.url = "http://example.com/text"
+//          ajax.auto = true;
+          myEl.setAttribute('entityid', 'AAApkZAAOAAARQYABN');
+          cb();
+        },
+        animationFrameFlush,
+      ], done);
+      responded = false;
+    });
+    suite('core-response', function(){
+      test('core-response should be fired on success', function(done){
+        window.addEventListener('get-response', function(response, xhr){
+          responded = true;
+        });
+        requests[0].respond(200, headers, body);
+        assert.isTrue(responded);
+        done();
+      });
+
+    });
+
+  });
+});
+</script>
+
+</body>
+</html>
