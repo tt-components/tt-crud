@@ -43,7 +43,6 @@
       // --- ---------------------
 
       entityGet: function () {
-        console.log('----------------- core-ajax call ', this.entityid);
         this.$.serviceGet.go();
       },
 
@@ -65,9 +64,6 @@
           body: this.data._source
         };
         this.dataToSaveString = JSON.stringify(opt);
-        console.log('************ entityCreate', this.data);
-        console.log('************ entityCreate datastring', this.dataToSaveString);
-        console.log('Request Create of ', opt);
         this.serviceSaveVerb = 'POST';
 
         this.$.serviceSave.go();
@@ -106,7 +102,6 @@
       // --- ---------------------
 
       handleGetResponse: function (event, detail) {
-        console.log('----------------- core-ajax response ', detail.response);
         var status = detail.xhr.status;
         var statusText = detail.xhr.statusText;
         // Fire Event
@@ -118,7 +113,6 @@
       },
 
       handleGetError: function (event, detail) {
-        console.log('----------------- core-ajax call ', this.entityid);
         // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
         console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
         var resp = JSON.parse(detail.xhr.response);

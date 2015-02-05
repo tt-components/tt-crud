@@ -208,8 +208,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
 
       entityidChanged: function () {
-//        console.log('entityidChanged : ', this.entityid);
-        console.log('----------------- entityidChanged for ', this.entityid);
+//        console.log('entityidChanged : ', this.entityid); 
         if (this.entityid === '' || this.entityid === null) {
           // Blank case, no model to create
           this.data = undefined;
@@ -259,7 +258,6 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // --- ---------------------
 
       entityGet: function () {
-        console.log('----------------- entityGet call ', this.entityid);
         this.$.server.entityGet();
       },
 
@@ -505,7 +503,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
       removeInputWatcher: function () {
         var childNodes = this.getFornInputField(this.$.content.getDistributedNodes());
-         console.log('---------- removeInputWatcher', childNodes);
+//         console.log('---------- removeInputWatcher', childNodes);
         var that = this;
         childNodes.forEach(function (childNode) {
           Polymer.removeEventListener(childNode, 'blur', that.blurListener, true);
