@@ -59,7 +59,6 @@ Fired when the `tt-crud`'s `get` the entity from server.
 -->
 
 
-
 <link rel="import" href="../polymer/polymer.html">
 
 <link rel="import" href="../core-style/core-style.html">
@@ -67,7 +66,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 <link rel="import" href="../core-icon/core-icon.html">
 
- <link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
 
 <link rel="import" href="../paper-button/paper-button.html">
 
@@ -88,7 +87,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 <core-style id="tt-group-edit">
   .toast-error {
-     background-color: {{g.paperInput.invalidColor}};
+  background-color: {{g.paperInput.invalidColor}};
   }
 
 
@@ -133,11 +132,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
     <!--<tt-crud-delete-confirm  id="dialogDeleteConfirm" on-delete-confirm="{{entityDelete}}">-->
     <!--</tt-crud-delete-confirm>-->
-    <tt-crud-delete-undo  id="dialogDeleteConfirm" on-delete-confirm="{{entityDelete}}">
+    <tt-crud-delete-undo id="dialogDeleteConfirm" on-delete-confirm="{{entityDelete}}">
     </tt-crud-delete-undo>
-
-
-    <div on-tap="{{test}}">Bouton Test</div>
 
 
   </template>
@@ -149,10 +145,10 @@ Fired when the `tt-crud`'s `get` the entity from server.
       autosave: false,
       autocreate: false,
       autoupdate: false,
-      isCreate : false,
+      isCreate: false,
 //      },
       computed: {
-        isModeCreate : 'data && !data._id',
+        isModeCreate: 'data && !data._id',
         isAutosave: 'autosave ? autosave : (isModeCreate ? autocreate : autoupdate)'
       },
       // Config
@@ -172,7 +168,6 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       // Toast Message
       toastSaveErrorMessage: undefined,
-
 
 
       // --- Life Cycle
@@ -200,15 +195,14 @@ Fired when the `tt-crud`'s `get` the entity from server.
         // ------------------------------------------------------------------
         // FIXME : To Delete after resolved Issue https://github.com/Polymer/paper-input/issues/148
         // ------------------------------------------------------------------
-        this.async( function () {
+        this.async(function () {
           this.checkValidity();
         }, 0);
         // ------------------------------------------------------------------
-
       },
 
       entityidChanged: function () {
-//        console.log('entityidChanged : ', this.entityid); 
+//        console.log('entityidChanged : ', this.entityid);
         if (this.entityid === '' || this.entityid === null) {
           // Blank case, no model to create
           this.data = undefined;
@@ -327,14 +321,10 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
 
 
-
-
       handleSaveResponse: function (event, detail) {
         var status = detail.status;
         var resp = detail.response;
         console.log('Save response', status, ':', resp);
-
-
         // Check Existing id
         if (!this.data._id) {
           this.data._id = resp._id;
@@ -403,7 +393,6 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
 
 
-
       // --- Conflict Resolution
       // --- ---------------------
       resolveConflict: function () {
@@ -438,11 +427,9 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // --- ---------------------
 
 
-        checkValidity: function (errorCallback) {
-          this.$.validator.validateAll(errorCallback);
-        },
-
-
+      checkValidity: function (errorCallback) {
+        this.$.validator.validateAll(errorCallback);
+      },
 
 
       notifValidityErrors: function (errorNodes) {
@@ -465,8 +452,6 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       // --- Data Differential
       // --- ---------------------
-
-
       isDiff: function (notDiffCallback) {
         var diff = this.diffProperties(this.dataOri._source, this.data._source);
         if (notDiffCallback) {
@@ -547,7 +532,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // --- ---------------------
 
 
-    }, crudUtilsMixin, crudNodeWalkerMixin ));
+    }, crudUtilsMixin, crudNodeWalkerMixin));
 
   </script>
 </polymer-element>
