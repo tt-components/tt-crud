@@ -9,7 +9,7 @@
   <script src="../../web-component-tester/browser.js"></script>
 
   <!-- Step 1: import the element to test -->
-  <link rel="import" href="../tt-crud.html">
+  <link rel="import" href="../tt-crud-server.html">
 
   <!-- Step 1.1: import the element to test -->
   <link rel="import" href="../../paper-input/paper-input-decorator.html">
@@ -18,11 +18,13 @@
 </head>
 <body>
 
-<tt-crud id="fixture" entityid="" index="users" autosave>
-  <!-- Step 1: import the element to test -->
-  <paper-input-decorator floatingLabel label="First name" autoValidate>
-    <input is="core-input" value="ssss" required>
-  </paper-input-decorator>
+
+<tt-crud id="fixture" entityid="" index="users" data="{{body}}">
+  <section>
+    <paper-input-decorator floatingLabel label="First name" autoValidate>
+      <input is="core-input" value="{{ data._source.firstname}}" required>
+    </paper-input-decorator>
+  </section>
 </tt-crud>
 
 <script>
@@ -30,10 +32,8 @@
 
   suite('<tt-crud>', function () {
     var server;
-    var requests= [];
-    var headers = {
-      "Content-Type": "application/json; charset=utf-8"
-    };
+    var should = chai.should();
+
     var body = {
       "_index": "users",
       "_type": "user",
@@ -43,44 +43,62 @@
       "_source": {"lastname": "ABBATI", "firstname": "CHARLES"}
     };
     suiteSetup(function () {
-      console.log("**************** suiteSetup");
       server = sinon.fakeServer.create();
-      requests.push(server);
     });
+
     suiteTeardown(function () {
       console.log("**************** suiteTeardown");
       server.restore();
     });
-    setup(function () {
-      console.log("**************** setup");
-      server.requests = [];
+
+
+    // http://sinonjs.org/docs/#respond
+    test('entity-get should be fired on success', function (done) {
+      var callback = sinon.spy();
+      var responded = false;
+      var that =this;
+      myEl.addEventListener('entity-get', function (event, detail) {
+        callback(event, detail);
+        responded = true;
+        //  that.assert.equal(detail.status, 200 );
+      });
+      server.respondWith("GET", "/s/users/AAApkZAAOAAARQYABN", [200, {"Content-Type": "application/json"}, JSON.stringify(body)]);
+      //  server.respondWith("GET", "/s/users/AAApkZAAOAAARQYABNx", [404, {"Content-Type": "application/json"}, JSON.stringify({"_index":"users","_type":"user","_id":"AAApkZAAOAAARQYABNx","found":false})]);
+
+      // Validate initial Step
+      // ----------------------
+      assert.isUndefined(myEl.data);
+
+
+      // Validate initial Step
+      // ----------------------
+//      myEl.setAttribute('entityid', 'AAApkZAAOAAARQYABN');
+      myEl.entityid = 'AAApkZAAOAAARQYABN';
+      // Validate initial Step Entity ID
+      // ----------------------
+      assert.equal(myEl.entityid, 'AAApkZAAOAAARQYABN', 'entityid is not set as expected');
+      expect(myEl.entityid).to.equal('AAApkZAAOAAARQYABN');
+      myEl.entityid.should.equal('AAApkZAAOAAARQYABN');
+
+
+      server.respond();
+
+      // Assert Callback
+      // ----------------------
+      assert.isTrue(responded, 'no response form callback');
+      sinon.assert.callCount(callback, 1);
+
+      // Assert Response
+      // ----------------------
+      assert.equal(myEl.data._id, 'AAApkZAAOAAARQYABN');
+      expect(myEl.data._id).to.equal('AAApkZAAOAAARQYABN');
+
+      // ----------------------
+      done();
+
     });
 
-    suite('handleAs', function () {
-      test('defines the "index" property', function () {
-        assert.equal(myEl.index, 'users');
-        assert.equal(myEl.isAutosave, true);
-      });
-      // http://sinonjs.org/docs/#respond
-      test('entity-get should be fired on success', function (done) {
-         server.respondWith("GET", "/s/users/AAApkZAAOAAARQYABN", [200, {"Content-Type": "application/json"}, JSON.stringify(body)]);
 
-        var callback = sinon.spy();
-        window.addEventListener('entity-get', function () {
-          callback();
-          console.log("**************** callback entity-get");
-
-        });
-        myEl.setAttribute('entityid', 'AAApkZAAOAAARQYABN');
-        requests[0].respond( 200,  {"Content-Type": "application/json"}, JSON.stringify(body));
-        // requests[0].respond(200, headers, body);
-        server.respond();
-        // assert.isTrue(responded);
-      //  sinon.assert.callCount(callback, 1);
-       // done();
-
-      });
-    });
 
 
   });
