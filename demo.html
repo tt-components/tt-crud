@@ -1,14 +1,59 @@
 <!doctype html>
 <html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>tt-crud Demo</title>
-    <script src="../webcomponentsjs/webcomponents.js"></script>
-    <link rel="import" href="tt-crud.html">
-  </head>
-  <body unresolved>
-    <p>An `tt-crud` looks like this:</p>
-    <tt-crud></tt-crud>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tt-crud Demo</title>
+  <script src="../webcomponentsjs/webcomponents.js"></script>
+  <link rel="import" href="tt-crud.html">
+
+
+  <link rel="import" href="../paper-input/paper-input.html">
+  <link rel="import" href="../core-input/core-input.html">
+  <link rel="import" href="../paper-input/paper-input-decorator.html">
+
+</head>
+<body unresolved>
+<p>An `tt-crud` looks like this:</p>
+
+<polymer-element name="tt-crud-demo">
+  <template>
+    <tt-crud data="{{data}}" entityid="{{entityid}}" index="users" autosave>
+      <section>
+        <paper-input-decorator floatingLabel label="First name" autoValidate>
+          <input is="core-input" value="{{ data._source.firstname}}" required>
+        </paper-input-decorator>
+
+        <paper-input-decorator floatingLabel label="Last name" autoValidate>
+          <input is="core-input" value="{{ data._source.lastname}}" required>
+        </paper-input-decorator>
+
+        <paper-input-decorator floatingLabel label="Email" autoValidate>
+          <input is="core-input" id="input2" value="{{ data._source.email}}" type="email">
+        </paper-input-decorator>
+
+        <paper-input-decorator floatingLabel label="Email 2" autoValidate>
+          <input is="core-input" name="inputEmail2" value="{{ data._source.email2}}" type="email">
+        </paper-input-decorator>
+      </section>
+
+      <paper-radio-group selected="{{radioSelected}}">
+        <paper-radio-button name="small" label="Small"></paper-radio-button>
+        <paper-radio-button name="medium" label="Medium"></paper-radio-button>
+        <paper-radio-button name="large" label="Large"></paper-radio-button>
+      </paper-radio-group>
+
+
+    </tt-crud>
+  </template>
+
+  <script>
+    Polymer('tt-group-demo', {
+
+      data: undefined
+    });
+
+  </script>
+</polymer-element>
+</body>
 </html>

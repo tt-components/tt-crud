@@ -68,11 +68,10 @@
 
 
       // Validate initial Step
-      // ----------------------
-      myEl.entityGet();
-      server.respond();
+      // ----------------------mobile
 
-      // Assert Callback
+      myEl.entityGet();
+      server.respond(),// Assert Callback
       // ----------------------
       assert.isTrue(responded);
       sinon.assert.callCount(callback, 1);

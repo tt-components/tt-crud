@@ -87,10 +87,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 <core-style id="tt-group-edit">
   .toast-error {
-  background-color: {{g.paperInput.invalidColor}};
+    background-color: {{g.paperInput.invalidColor}};
   }
-
-
 </core-style>
 
 <polymer-element name="tt-crud" attributes="entityid data index  autosave autocreate autoupdate">
@@ -116,11 +114,14 @@ Fired when the `tt-crud`'s `get` the entity from server.
     <tt-crud-validator id="validator" target="{{$.content}}"></tt-crud-validator>
     <tt-crud-validation-config id="validator_config" target="{{$.content}}"></tt-crud-validation-config>
 
-
-    <section vertical layout>
-      <content id="content"></content>
-    </section>
-
+    <template if="{{data}}">
+      <section vertical layout>
+        <content id="content"></content>
+      </section>
+    </template>
+    <template if="{{!data}}">
+      No Data
+    </template>
 
     <paper-toast id="toastSaveSuccess" class="capsule" text="Entity Saved.">
       <core-icon icon="done"></core-icon>
@@ -523,9 +524,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       showSaveErrorMessage: function (msg) {
         this.toastSaveErrorMessage = msg;
         this.$.toastSaveError.show();
-
       }
-
 
 
       // --- Others
