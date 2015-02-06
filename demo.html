@@ -7,17 +7,36 @@
   <script src="../webcomponentsjs/webcomponents.js"></script>
   <link rel="import" href="tt-crud.html">
 
+  <link rel="import" href="../polymer/polymer.html">
+
+  <link rel="import" href="../paper-button/paper-button.html">
+  <link href="../font-roboto/roboto.html" rel="import">
 
   <link rel="import" href="../paper-input/paper-input.html">
   <link rel="import" href="../core-input/core-input.html">
   <link rel="import" href="../paper-input/paper-input-decorator.html">
 
+  <link rel="import" href="../paper-radio-group/paper-radio-group.html">
+  <link rel="import" href="../paper-radio-button/paper-radio-button.html">
+
 </head>
 <body unresolved>
-<p>An `tt-crud` looks like this:</p>
+
 
 <polymer-element name="tt-crud-demo">
   <template>
+    <style>
+      .my-button {
+        background-color: #3e50b4;
+        fill: white;
+        color: white;
+      }
+    </style>
+
+    <paper-button class="my-button" on-tap="{{loadDataEntity01}}">
+      Load Entity 01
+    </paper-button>
+
     <tt-crud data="{{data}}" entityid="{{entityid}}" index="users" autosave>
       <section>
         <paper-input-decorator floatingLabel label="First name" autoValidate>
@@ -48,12 +67,28 @@
   </template>
 
   <script>
-    Polymer('tt-group-demo', {
+    Polymer('tt-crud-demo', {
 
-      data: undefined
+      data: undefined,
+      dataEntity01:     { _id: "AAApkZAAOAAAQYEAAJ",
+        _index: "users",
+        _source: {
+          firstname: "NICOLE",
+          lastname: "ABBO"
+        },
+        _type: "user",
+        _version: 1,
+        found: true
+      },
+      loadDataEntity01: function () {
+        this.data= this.dataEntity01;
+      }
     });
 
   </script>
 </polymer-element>
+
+<p>An `tt-crud` looks like this:</p>
+<tt-crud-demo></tt-crud-demo>
 </body>
 </html>
