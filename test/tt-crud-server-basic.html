@@ -87,6 +87,40 @@
     });
 
 
+    test('entity-error should be fired on error', function (done) {
+      var callback = sinon.spy();
+      var responded = false;
+      var that =this;
+      myEl.addEventListener('get-error', function (event, detail) {
+        callback(event, detail);
+        responded = true;
+        //  that.assert.equal(detail.status, 200 );
+      });
+//      server.respondWith("GET", "/s/users/AAApkZAAOAAARQYABN", [200, {"Content-Type": "application/json"}, JSON.stringify(body)]);
+        server.respondWith("GET", "/s/users/AAApkZAAOAAARQYABNx", [404, {"Content-Type": "application/json"}, JSON.stringify({"_index":"users","_type":"user","_id":"AAApkZAAOAAARQYABNx","found":false})]);
+
+      // Validate initial Step
+      // ----------------------
+       myEl.entityid = 'AAApkZAAOAAARQYABNx';
+     //  assert.isUndefined(myEl.data);
+
+
+
+      // Validate initial Step
+      // ----------------------mobile
+
+      myEl.entityGet();
+      server.respond();// Assert Callback
+        // ----------------------
+ //       assert.isTrue(responded);
+      sinon.assert.callCount(callback, 1);
+
+
+      // ----------------------
+      done();
+
+    });
+
 
 
   });

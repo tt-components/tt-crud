@@ -98,6 +98,23 @@
         this.$.serviceDelete.go();
       },
 
+      // --- Response Error Event
+      // --- ---------------------
+      extractErrorFromResponse: function (event, detail) {
+        console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response, detail.xhr.response);
+        var resp;
+        if (detail.xhr.response) {
+          resp = JSON.parse(detail.xhr.response);
+        }
+        var status = detail.xhr.status;
+        var statusText = detail.xhr.statusText;
+        return {
+          response: resp,
+          status: status,
+          statusText: statusText
+        };
+      },
+
       // --- Get Event
       // --- ---------------------
 
@@ -113,17 +130,9 @@
       },
 
       handleGetError: function (event, detail) {
-        // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
-        console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
-        var resp = JSON.parse(detail.xhr.response);
-        var status = detail.xhr.status;
-        var statusText = detail.xhr.statusText;
+        var eventTest = this.extractErrorFromResponse(event, detail);
         // Fire Event
-        this.fire('get-error', {
-          response: resp,
-          status: status,
-          statusText: statusText
-        });
+        this.fire('get-error', eventTest);
       },
 
       // --- Save Event
@@ -142,17 +151,9 @@
       },
 
       handleSaveError: function (event, detail) {
-        // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
-        console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
-        var resp = JSON.parse(detail.xhr.response);
-        var status = detail.xhr.status;
-        var statusText = detail.xhr.statusText;
+        var eventTest = this.extractErrorFromResponse(event, detail);
         // Fire Event
-        this.fire('save-error', {
-          response: resp,
-          status: status,
-          statusText: statusText
-        });
+        this.fire('save-error',eventTest);
       },
 
       // --- Delete Event
@@ -171,17 +172,9 @@
       },
 
       handleDeleteError: function (event, detail) {
-        // BUG ? detail.response as Text with status:JsonObj ? ==> Read from xhr
-        console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response);
-        var resp = JSON.parse(detail.xhr.response);
-        var status = detail.xhr.status;
-        var statusText = detail.xhr.statusText;
+        var eventTest = this.extractErrorFromResponse(event, detail);
         // Fire Event
-        this.fire('delete-error', {
-          response: resp,
-          status: status,
-          statusText: statusText
-        });
+        this.fire('delete-error',eventTest);
       }
 
 
