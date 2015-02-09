@@ -17,7 +17,7 @@ gulp.task('default', [['clean', 'build-vulcanize', 'lint']], function () {
 });
 
 gulp.task('test', [[ 'test:local']], function () {
-  console.log('test end.');
+ // console.log('test end.');
 });
 
 

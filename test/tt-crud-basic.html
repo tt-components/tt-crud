@@ -18,21 +18,23 @@
 </head>
 <body>
 
+<template id="root" is="auto-binding">
 
-<tt-crud id="fixture" entityid="" index="users" data="{{body}}">
-  <section>
-    <paper-input-decorator floatingLabel label="First name" autoValidate>
-      <input is="core-input" value="{{ data._source.firstname}}" required>
-    </paper-input-decorator>
-  </section>
-</tt-crud>
+  <tt-crud id="fixture" entityid="" index="users" data="{{body}}">
+    <section>
+      <paper-input-decorator floatingLabel label="First name" autoValidate>
+        <input is="core-input" value="{{ data._source.firstname}}" required>
+      </paper-input-decorator>
+    </section>
+  </tt-crud>
+</template>
 
 <script>
-  var myEl = document.getElementById('fixture');
+  var root = document.getElementById('root');
+  var myEl = root.shadowRoot.getElementById('fixture');
 
   suite('<tt-crud>', function () {
     var server;
-    var should = chai.should();
 
     var body = {
       "_index": "users",
@@ -53,10 +55,10 @@
 
 
     // http://sinonjs.org/docs/#respond
-    test('entity-get should be fired on success', function (done) {
+    test('crud-get should be fired on success', function (done) {
       var callback = sinon.spy();
       var responded = false;
-      var that =this;
+      var that = this;
       myEl.addEventListener('entity-get', function (event, detail) {
         callback(event, detail);
         responded = true;
@@ -78,14 +80,13 @@
       // ----------------------
       assert.equal(myEl.entityid, 'AAApkZAAOAAARQYABN', 'entityid is not set as expected');
       expect(myEl.entityid).to.equal('AAApkZAAOAAARQYABN');
-      myEl.entityid.should.equal('AAApkZAAOAAARQYABN');
 
 
       server.respond();
 
       // Assert Callback
       // ----------------------
-      assert.isTrue(responded, 'no response form callback');
+      //  assert.isTrue(responded, 'no response form callback');
       sinon.assert.callCount(callback, 1);
 
       // Assert Response
@@ -97,8 +98,6 @@
       done();
 
     });
-
-
 
 
   });
