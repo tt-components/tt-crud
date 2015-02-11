@@ -1,22 +1,21 @@
 var gulp = require('gulp');
 
-require('gulp-run-seq');
 require('web-component-tester').gulp.init(gulp);
 
 var clean = require('gulp-clean');
 var vulcanize = require('gulp-vulcanize');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
-
+var cache = require('gulp-cached');
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // DEFAULT FOR 'gulp' COMMAND
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-gulp.task('default', [['clean', 'build-vulcanize', 'lint']], function () {
+gulp.task('default', ['clean', 'build-vulcanize', 'lint'], function () {
   console.log('default end.');
 });
 
-gulp.task('test', [[ 'test:local']], function () {
+gulp.task('test', [ 'test:local'], function () {
  // console.log('test end.');
 });
 
@@ -30,7 +29,7 @@ gulp.task('clean', function () {
 // Test TASKS
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-gulp.task('test', [['test:local']], function () {
+gulp.task('test', ['test:local'], function () {
   console.log('test end.');
 });
 
@@ -58,6 +57,7 @@ gulp.task('build-vulcanize', function () {
 
 gulp.task('lint', function () {
   return gulp.src('*.html')
+    .pipe(cache('linting'))
     .pipe(jshint.extract('auto'))
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'));
