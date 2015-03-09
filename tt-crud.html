@@ -429,7 +429,9 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 
       checkValidity: function (errorCallback) {
-        this.$.validator.validateAll(errorCallback);
+        if ( this.$.validator) {
+          this.$.validator.validateAll(errorCallback);
+        }
       },
 
 
@@ -488,16 +490,18 @@ Fired when the `tt-crud`'s `get` the entity from server.
         });
       },
       removeInputWatcher: function () {
-        var childNodes = this.getFornInputField(this.$.content.getDistributedNodes());
-//         console.log('---------- removeInputWatcher', childNodes);
         var that = this;
-        childNodes.forEach(function (childNode) {
-          Polymer.removeEventListener(childNode, 'blur', that.blurListener, true);
-          Polymer.removeEventListener(childNode, 'input', that.focusListener, true);
+        if (that.blurListener || that.focusListener) {
+          var childNodes = this.getFornInputField(this.$.content.getDistributedNodes());
+//         console.log('---------- removeInputWatcher', childNodes);
+          childNodes.forEach(function (childNode) {
+            Polymer.removeEventListener(childNode, 'blur', that.blurListener, true);
+            Polymer.removeEventListener(childNode, 'input', that.focusListener, true);
 
-        });
-        this.focusListener = undefined;
-        this.blurListener = undefined;
+          });
+          this.focusListener = undefined;
+          this.blurListener = undefined;
+        }
       },
 
       autoSaveInputFieldBlur: function () {
