@@ -6,7 +6,7 @@
 
  Example:
 
-  <tt-crud data="{{data}}" entityid="{{entityid}}" index="users" autosave >
+  <tt-crud data="{{data}}" entityid="{{entityid}}" endpoint="/s/users" autosave >
       <section>
         <paper-input-decorator floatingLabel label="First name" autoValidate>
           <input is="core-input" value="{{ data._source.firstname}}" required>
@@ -91,13 +91,13 @@ Fired when the `tt-crud`'s `get` the entity from server.
   }
 </core-style>
 
-<polymer-element name="tt-crud" attributes="entityid data index  autosave autocreate autoupdate">
+<polymer-element name="tt-crud" attributes="entityid data endpoint  autosave autocreate autoupdate">
   <template>
     <tt-crud-server id="server" role="database"
                     on-get-response="{{handleGetResponse}}" on-get-error="{{handleGetError}}"
                     on-save-response="{{handleSaveResponse}}" on-save-error="{{handleSaveError}}"
                     on-delete-response="{{handleDeleteResponse}}" on-delete-error="{{handleSaveError}}"
-                    entityid="{{entityid}}" data="{{data}}" index="{{index}}">
+                    entityid="{{entityid}}" data="{{data}}" endpoint="{{endpoint}}">
     </tt-crud-server>
 
     <tt-crud-conflictresolution id="conflictResolution" data="{{data}}"

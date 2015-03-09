@@ -3,24 +3,24 @@
 <link rel="import" href="../core-ajax/core-ajax.html">
 
 
-<polymer-element name="tt-crud-server" hidden attributes="entityid data index">
+<polymer-element name="tt-crud-server" hidden attributes="endpoint entityid data">
   <template>
 
-    <core-ajax id="serviceGet" url="/s/{{index}}/{{entityid}}" handleAs="json"
+    <core-ajax id="serviceGet" url="{{endpoint}}/{{entityid}}" handleAs="json"
                contentType="application/json"
                response="{{data}}"
                method="GET"
                on-core-error="{{handleGetError}}"
                on-core-response="{{handleGetResponse}}">
     </core-ajax>
-    <core-ajax id="serviceSave" url="/s/{{index}}/{{entityid}}" handleAs="json"
+    <core-ajax id="serviceSave" url="{{endpoint}}/{{entityid}}" handleAs="json"
                contentType="application/json"
                body="{{dataToSaveString}}"
                method="{{serviceSaveVerb}}"
                on-core-error="{{handleSaveError}}"
                on-core-response="{{handleSaveResponse}}">
     </core-ajax>
-    <core-ajax id="serviceDelete" url="/s/{{index}}/{{entityid}}" handleAs="json"
+    <core-ajax id="serviceDelete" url="/{{endpoint}}/{{entityid}}" handleAs="json"
                contentType="application/json"
                body="{{dataToDeleteString}}"
                method="DELETE"
