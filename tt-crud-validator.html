@@ -12,6 +12,9 @@
       'use strict';
         Polymer('tt-crud-validator', Polymer.mixin({
           validateAll: function (errorCallback) {
+            if (!this.target) {
+              return true;
+            }
             var childNodes = this.getFornInputField(this.target.getDistributedNodes());
             console.log('checkValidity Nodes of ', childNodes);
 

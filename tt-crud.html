@@ -115,10 +115,10 @@ Fired when the `tt-crud`'s `get` the entity from server.
     <tt-crud-validation-config id="validator_config" target="{{$.content}}"></tt-crud-validation-config>
 
     <template if="{{data}}">
-      <section vertical layout>
-        <content id="content"></content>
-      </section>
+      <content id="content"></content>
     </template>
+
+
     <template if="{{!data}}">
       No Data
     </template>
@@ -173,10 +173,28 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       // --- Life Cycle
       // --- ---------------
+      attached: function() {
+        this.mo = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            console.log('*****************************', mutation.type, mutation);
+            console.log('***************************** Added ',   mutation.addedNodes);
+            console.log('***************************** Remove ',   mutation.removedNodes);
+            //  console.log('***************************** Add Observer ',mutation.addedNodes[1].getDistributedNodes()[1]);
+            //  mo.observe(mutation.addedNodes[1].getDistributedNodes()[1], {childList: true, subtree: true});
+          });
+        }.bind(this));
+        this.mo.observe(this, {childList: true, subtree: true});
+      },
 
       detached: function () {
+        // Remove Mutation Observer
+        if ( this.mo) {
+          this.mo.disconnect();
+          this.mo = null;
+        }
         // Remove Binding listener for Blur and Focus
         this.removeInputWatcher();
+
       },
 
       // --- Initial State
