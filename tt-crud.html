@@ -87,12 +87,18 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 <core-style id="tt-group-edit">
   .toast-error {
-    background-color: {{g.paperInput.invalidColor}};
+  background-color: {{g.paperInput.invalidColor}};
   }
 </core-style>
 
 <polymer-element name="tt-crud" attributes="entityid data endpoint  autosave autocreate autoupdate">
   <template>
+    <style>
+      #dataContainer {
+        display: none;
+      }
+
+    </style>
     <tt-crud-server id="server" role="database"
                     on-get-response="{{handleGetResponse}}" on-get-error="{{handleGetError}}"
                     on-save-response="{{handleSaveResponse}}" on-save-error="{{handleSaveError}}"
@@ -111,17 +117,18 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
     </tt-crud-menu>
 
-    <tt-crud-validator id="validator" target="{{$.content}}"></tt-crud-validator>
+
     <tt-crud-validation-config id="validator_config" target="{{$.content}}"></tt-crud-validation-config>
-
-    <template if="{{data}}">
-      <content id="content"></content>
-    </template>
-
+    <tt-crud-validator id="validator" target="{{$.content}}"></tt-crud-validator>
 
     <template if="{{!data}}">
       No Data
     </template>
+    <div id="dataContainer">
+      <content id="content"></content>
+    </div>
+
+
 
     <paper-toast id="toastSaveSuccess" class="capsule" text="Entity Saved.">
       <core-icon icon="done"></core-icon>
@@ -173,22 +180,23 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       // --- Life Cycle
       // --- ---------------
-      attached: function() {
-        this.mo = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            console.log('*****************************', mutation.type, mutation);
-            console.log('***************************** Added ',   mutation.addedNodes);
-            console.log('***************************** Remove ',   mutation.removedNodes);
-            //  console.log('***************************** Add Observer ',mutation.addedNodes[1].getDistributedNodes()[1]);
-            //  mo.observe(mutation.addedNodes[1].getDistributedNodes()[1], {childList: true, subtree: true});
-          });
+      ready: function () {
+        this.mo = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+//            console.log('*****************************', mutation.type, mutation);
+//            console.log('***************************** Added ', mutation.addedNodes.length, Array.prototype.slice.call(mutation.addedNodes));
+//            console.log('***************************** Remove ', mutation.removedNodes.length, Array.prototype.slice.call(mutation.removedNodes));
+
+            this.addInputWatcher(Array.prototype.slice.call(mutation.addedNodes));
+            this.removeInputWatcher(Array.prototype.slice.call(mutation.removedNodes));
+          }.bind(this));
         }.bind(this));
         this.mo.observe(this, {childList: true, subtree: true});
       },
 
       detached: function () {
         // Remove Mutation Observer
-        if ( this.mo) {
+        if (this.mo) {
           this.mo.disconnect();
           this.mo = null;
         }
@@ -208,16 +216,27 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       dataSnapshot: function () {
 //        console.log('***************************');
-//        console.log(' Data Changed to : ', this.data);
+        console.log(' Data Changed to : ', this.data);
         this.dataOri = JSON.parse(JSON.stringify(this.data));
+
 //        console.log('***************************');
         // ------------------------------------------------------------------
         // FIXME : To Delete after resolved Issue https://github.com/Polymer/paper-input/issues/148
         // ------------------------------------------------------------------
         this.async(function () {
+          console.log('async checkValidity NOW');
           this.checkValidity();
-        }, 0);
+        }, null, 0);
+        console.log('async checkValidity in 1s');
         // ------------------------------------------------------------------
+      },
+
+      dataChanged: function () {
+        if (this.data) {
+          this.$.dataContainer.style.display = 'block';
+        } else {
+          this.$.dataContainer.style.display = 'none';
+        }
       },
 
       entityidChanged: function () {
@@ -225,6 +244,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         if (this.entityid === '' || this.entityid === null) {
           // Blank case, no model to create
           this.data = undefined;
+          this.dataOri= undefined;
         } else if (this.entityid === undefined) {
           // Create Model
           this.createEmptyEntity();
@@ -323,18 +343,25 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       save: function () {
         // Dirty Check
+
         if (!this.isDiff(this.notifNotDiff.bind(this))) {
+          console.log('Save entity == NO Diff ');
           return;
         }
+
         // Validation
         if (!this.checkValidity(this.notifValidityErrors.bind(this))) {
+          console.log('Save entity == NOT Valid ');
           return;
         }
 
         // Diff, need to save
+
         if (this.isModeCreate) {
+          console.log('Save entity == Create NEEDED');
           this.entityCreate();
         } else {
+          console.log('Save entity == Update NEEDED');
           this.entityUpdate();
         }
       },
@@ -447,13 +474,17 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
 
       checkValidity: function (errorCallback) {
-        if ( this.$.validator) {
-          this.$.validator.validateAll(errorCallback);
+        console.log('checkValidity on ', this.$);
+        var isValid = true;
+        if (this.$.validator) {
+          isValid= this.$.validator.validateAll(errorCallback);
         }
+        return isValid;
       },
 
 
       notifValidityErrors: function (errorNodes) {
+        console.log('notifValidityErrors ', errorNodes);
         if (errorNodes && errorNodes.length > 0) {
           if (this.validateautofocus === '' || this.validateautofocus === true) {
             var errorNode = errorNodes[0];
@@ -489,52 +520,58 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       // --- AutoSave
       // --- ---------------------
-      addInputWatcher: function () {
-        var childNodes = this.getFornInputField(this.$.content.getDistributedNodes());
-        var that = this;
-        console.log('---------- addInputWatcher', childNodes);
-        this.focusListener = this.focusListener || this.autoSaveInputFieldFocus.bind(this);
-        this.blurListener = this.blurAction || this.autoSaveInputFieldBlur.bind(this);
-        childNodes.forEach(function (childNode) {
-          var focusable = childNode;
+      addInputWatcher: function (domNodes) {
+        var domNodes = domNodes || (this.$.content ? this.$.content.getDistributedNodes() : undefined);
+        var childNodes = this.getFornInputField(domNodes);
+        if (childNodes) {
+          var that = this;
+          console.log('---------- addInputWatcher', childNodes);
+          this.focusListener = this.focusListener || this.autoSaveInputFieldFocus.bind(this);
+          this.blurListener = this.blurAction || this.autoSaveInputFieldBlur.bind(this);
+          childNodes.forEach(function (childNode) {
+            var focusable = childNode;
 //          if ('PAPER-INPUT-DECORATOR' === elt.tagName) {
-          // focusable = elt.input;
+            // focusable = elt.input;
 //          }
-          // Delegate focus/blur events
-          Polymer.addEventListener(focusable, 'input', that.focusListener, true);
-          Polymer.addEventListener(focusable, 'blur', that.blurListener, true);
+            // Delegate focus/blur events
+            Polymer.addEventListener(focusable, 'input', that.focusListener, true);
+            Polymer.addEventListener(focusable, 'blur', that.blurListener, true);
 
 //          console.log('---- addEventListener', focusable);
-        });
+          });
+        }
       },
-      removeInputWatcher: function () {
+      removeInputWatcher: function (domNodes) {
         var that = this;
         if (that.blurListener || that.focusListener) {
-          var childNodes = this.getFornInputField(this.$.content.getDistributedNodes());
-//         console.log('---------- removeInputWatcher', childNodes);
-          childNodes.forEach(function (childNode) {
-            Polymer.removeEventListener(childNode, 'blur', that.blurListener, true);
-            Polymer.removeEventListener(childNode, 'input', that.focusListener, true);
-
-          });
-          this.focusListener = undefined;
-          this.blurListener = undefined;
+          var domNodes = domNodes || this.$.content.getDistributedNodes();
+          var childNodes = this.getFornInputField(domNodes);
+          if (childNodes) {
+            console.log('---------- removeInputWatcher', childNodes);
+            childNodes.forEach(function (childNode) {
+              Polymer.removeEventListener(childNode, 'blur', that.blurListener, true);
+              Polymer.removeEventListener(childNode, 'input', that.focusListener, true);
+            });
+//          this.focusListener = undefined;
+//          this.blurListener = undefined;
+          }
         }
       },
 
       autoSaveInputFieldBlur: function () {
-//        console.log('*** Blur ', event);
+        console.log('*** Blur ', event);
 //        var autosave = this.isModeCreate ? (this.autocreate === '' || this.autocreate === true) : ( this.autosave === '' || this.autosave === true );
         // Auto save
-//        console.log('---- autoSaveInputFieldBlur', this.data);
+
         if (this.isAutosave && this.isDiff()) {
+         // console.log('---- autoSaveInputFieldBlur', this.data);
           this.job('save', function () {
             this.save();
           }, 200);
         }
       },
       autoSaveInputFieldFocus: function () {
-//        console.log('*** Focus ', event);
+        console.log('*** Focus ', event);
         if (this.isAutosave) {
           this.isSaveEnabled = true;
         }
