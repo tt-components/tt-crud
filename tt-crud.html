@@ -97,8 +97,11 @@ Fired when the `tt-crud`'s `get` the entity from server.
       #dataContainer {
         display: none;
       }
-
     </style>
+
+    <core-style ref="tt-group-edit"></core-style>
+
+
     <tt-crud-server id="server" role="database"
                     on-get-response="{{handleGetResponse}}" on-get-error="{{handleGetError}}"
                     on-save-response="{{handleSaveResponse}}" on-save-error="{{handleSaveError}}"
@@ -108,8 +111,6 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
     <tt-crud-conflictresolution id="conflictResolution" data="{{data}}"
                                 dataOri="{{dataOri}}"></tt-crud-conflictresolution>
-
-    <core-style ref="tt-group-edit"></core-style>
 
 
     <tt-crud-menu save="{{isSaveEnabled}}" isDelete="{{isDeleteEnabled}}"
@@ -124,6 +125,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
     <template if="{{!data}}">
       No Data
     </template>
+
     <div id="dataContainer">
       <content id="content"></content>
     </div>
@@ -202,7 +204,6 @@ Fired when the `tt-crud`'s `get` the entity from server.
         }
         // Remove Binding listener for Blur and Focus
         this.removeInputWatcher();
-
       },
 
       // --- Initial State
@@ -224,10 +225,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
         // FIXME : To Delete after resolved Issue https://github.com/Polymer/paper-input/issues/148
         // ------------------------------------------------------------------
         this.async(function () {
-          console.log('async checkValidity NOW');
           this.checkValidity();
         }, null, 0);
-        console.log('async checkValidity in 1s');
         // ------------------------------------------------------------------
       },
 
@@ -321,7 +320,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
 
       handleGetError: function (event, detail) {
-        console.log('handleGetError : ', detail);
+//        console.log('handleGetError : ', detail);
 
         this.fire('entity-get-error', {
           response: detail.response,
@@ -564,7 +563,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         // Auto save
 
         if (this.isAutosave && this.isDiff()) {
-         // console.log('---- autoSaveInputFieldBlur', this.data);
+          // console.log('---- autoSaveInputFieldBlur', this.data);
           this.job('save', function () {
             this.save();
           }, 200);
