@@ -91,14 +91,17 @@ Fired when the `tt-crud`'s `get` the entity from server.
   }
 </core-style>
 
-<polymer-element name="tt-crud" attributes="entityid data endpoint  autosave autocreate autoupdate">
+<polymer-element name="tt-crud" attributes="entityid data endpoint status autosave autocreate autoupdate">
   <template>
     <style>
       #dataContainer {
         display: none;
       }
-
     </style>
+
+    <core-style ref="tt-group-edit"></core-style>
+
+
     <tt-crud-server id="server" role="database"
                     on-get-response="{{handleGetResponse}}" on-get-error="{{handleGetError}}"
                     on-save-response="{{handleSaveResponse}}" on-save-error="{{handleSaveError}}"
@@ -109,10 +112,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
     <tt-crud-conflictresolution id="conflictResolution" data="{{data}}"
                                 dataOri="{{dataOri}}"></tt-crud-conflictresolution>
 
-    <core-style ref="tt-group-edit"></core-style>
 
-
-    <tt-crud-menu save="{{isSaveEnabled}}" isDelete="{{isDeleteEnabled}}"
+    <tt-crud-menu save="{{status.toSave}}" isDelete="{{status.toDelete}}"
                   on-tap-delete="{{onDeleteButton}}" on-tap-save="{{onSaveButton}}" on-tap-close="{{onClose}}">
 
     </tt-crud-menu>
@@ -124,6 +125,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
     <template if="{{!data}}">
       No Data
     </template>
+
     <div id="dataContainer">
       <content id="content"></content>
     </div>
@@ -166,11 +168,12 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // On Save : Reload the Data
       reloadOnSave: false,
       // Model
-      entityid: '',
+      entityid: null,
       data: undefined,
       dataOri: undefined,
 
       // Crud Menu Status
+      status: null,
       isSaveEnabled: false,
       isDeleteEnabled: false,
 
@@ -181,6 +184,11 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // --- Life Cycle
       // --- ---------------
       ready: function () {
+        this.status = this.status  || {
+          toSave : false,
+          toDelete: false
+        };
+        // Add Mutation Observer
         this.mo = new MutationObserver(function (mutations) {
           mutations.forEach(function (mutation) {
 //            console.log('*****************************', mutation.type, mutation);
@@ -202,7 +210,6 @@ Fired when the `tt-crud`'s `get` the entity from server.
         }
         // Remove Binding listener for Blur and Focus
         this.removeInputWatcher();
-
       },
 
       // --- Initial State
@@ -224,10 +231,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
         // FIXME : To Delete after resolved Issue https://github.com/Polymer/paper-input/issues/148
         // ------------------------------------------------------------------
         this.async(function () {
-          console.log('async checkValidity NOW');
           this.checkValidity();
         }, null, 0);
-        console.log('async checkValidity in 1s');
         // ------------------------------------------------------------------
       },
 
@@ -240,15 +245,15 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
 
       entityidChanged: function () {
-//        console.log('entityidChanged : ', this.entityid);
-        if (this.entityid === '' || this.entityid === null) {
+        console.log('entityidChanged : ', this.entityid);
+        if ( this.entityid === null|| this.entityid === undefined) {
           // Blank case, no model to create
           this.data = undefined;
           this.dataOri= undefined;
-        } else if (this.entityid === undefined) {
+        } else if (this.entityid === '') {
           // Create Model
           this.createEmptyEntity();
-          //  console.log('entityidChanged create empty data ', this.data);
+          console.log('entityidChanged create empty data ', this.data);
         } else if (!this.data || !this.data._id || this.data._id !== this.entityid) {
           // Update Mode
           this.entityGet();
@@ -299,10 +304,10 @@ Fired when the `tt-crud`'s `get` the entity from server.
         // Data Snapshot
         this.dataSnapshot();
         // Enable menu
-        this.isDeleteEnabled = true;
-//        console.log('--------------- this.isDeleteEnabled ', this.isDeleteEnabled);
+        this.status.toDelete = true;
+//        console.log('--------------- this.status.toDelete ', this.status.toDelete);
         if (this.isAutosave) {
-          this.isSaveEnabled = false;
+          this.status.toSave = false;
         }
 
         // Resolve conflict is Needed
@@ -321,7 +326,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       },
 
       handleGetError: function (event, detail) {
-        console.log('handleGetError : ', detail);
+//        console.log('handleGetError : ', detail);
 
         this.fire('entity-get-error', {
           response: detail.response,
@@ -375,7 +380,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         if (!this.data._id) {
           this.data._id = resp._id;
         }
-        if (!this.entityid) {
+        if (!this.entityid || this.entityid !== '') {
           this.entityid = resp._id;
         }
         // Increment version or reload data ?
@@ -392,7 +397,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         }
         // Manage Menu
         if (this.isAutosave) {
-          this.isSaveEnabled = false;
+          this.status.toSave = false;
         }
         // Show Notification
         this.$.toastSaveSuccess.show();
@@ -564,7 +569,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         // Auto save
 
         if (this.isAutosave && this.isDiff()) {
-         // console.log('---- autoSaveInputFieldBlur', this.data);
+          // console.log('---- autoSaveInputFieldBlur', this.data);
           this.job('save', function () {
             this.save();
           }, 200);
@@ -573,7 +578,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       autoSaveInputFieldFocus: function () {
         console.log('*** Focus ', event);
         if (this.isAutosave) {
-          this.isSaveEnabled = true;
+          this.status.toSave = true;
         }
       },
 
