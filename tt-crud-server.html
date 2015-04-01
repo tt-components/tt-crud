@@ -102,12 +102,12 @@
       // --- ---------------------
       extractErrorFromResponse: function (event, detail) {
         console.log('Bug handleSaveError detail.response (Not JSON) : ', detail.response, detail.xhr.response);
-        var resp;
-        if (detail.xhr.response) {
-          resp = JSON.parse(detail.xhr.response);
-        }
-        var status = detail.xhr.status;
-        var statusText = detail.xhr.statusText;
+        var resp = detail.response;
+//        if (detail.xhr.response) {
+//          resp = JSON.parse(detail.xhr.response);
+//        }
+        var status = resp.statusCode; /// detail.xhr.status;
+        var statusText = resp.response;//detail.xhr.statusText;
         return {
           response: resp,
           status: status,
