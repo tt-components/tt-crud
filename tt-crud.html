@@ -168,7 +168,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
       // On Save : Reload the Data
       reloadOnSave: false,
       // Model
-      entityid: '',
+      entityid: null,
       data: undefined,
       dataOri: undefined,
 
@@ -240,14 +240,14 @@ Fired when the `tt-crud`'s `get` the entity from server.
 
       entityidChanged: function () {
 //        console.log('entityidChanged : ', this.entityid);
-        if (this.entityid === '' || this.entityid === null) {
+        if ( this.entityid === null|| this.entityid === undefined) {
           // Blank case, no model to create
           this.data = undefined;
           this.dataOri= undefined;
-        } else if (this.entityid === undefined) {
+        } else if (this.entityid === '') {
           // Create Model
           this.createEmptyEntity();
-          //  console.log('entityidChanged create empty data ', this.data);
+          console.log('entityidChanged create empty data ', this.data);
         } else if (!this.data || !this.data._id || this.data._id !== this.entityid) {
           // Update Mode
           this.entityGet();
@@ -374,7 +374,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         if (!this.data._id) {
           this.data._id = resp._id;
         }
-        if (!this.entityid) {
+        if (!this.entityid || this.entityid !== '') {
           this.entityid = resp._id;
         }
         // Increment version or reload data ?
