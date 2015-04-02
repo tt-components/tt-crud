@@ -255,7 +255,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
           // Blank case, no model to create
           this.data = undefined;
           this.dataOri= undefined;
-        } else if (this.entityid === '') {
+        } else if (this.entityid === ''|| this.entityid === 'new') {
           // Create Model
           this.createEmptyEntity();
           console.log('entityidChanged create empty data ', this.data);
@@ -385,7 +385,7 @@ Fired when the `tt-crud`'s `get` the entity from server.
         if (!this.data._id) {
           this.data._id = resp._id;
         }
-        if (!this.entityid || this.entityid !== '') {
+        if (!this.entityid || this.entityid !== ''|| this.entityid !== 'new') {
           this.entityid = resp._id;
         }
         // Increment version or reload data ?
