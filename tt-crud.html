@@ -216,6 +216,13 @@ Fired when the `tt-crud`'s `get` the entity from server.
         this.entityid = null;
       },
 
+
+      // --- Data Observer
+      // --- ---------------------
+      getCrudStatus: function () {
+        return this.status;
+      },
+
       // --- Data Observer
       // --- ---------------------
 
@@ -242,8 +249,8 @@ Fired when the `tt-crud`'s `get` the entity from server.
         }
       },
 
-      entityidChanged: function () { 
-//        console.log('entityidChanged : ', this.entityid); 
+      entityidChanged: function () {
+//        console.log('entityidChanged : ', this.entityid);
         if ( this.entityid === null|| this.entityid === undefined) {
           // Blank case, no model to create
           this.data = undefined;
