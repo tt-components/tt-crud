@@ -20,7 +20,7 @@
                on-core-error="{{handleSaveError}}"
                on-core-response="{{handleSaveResponse}}">
     </core-ajax>
-    <core-ajax id="serviceDelete" url="/{{endpoint}}/{{entityid}}" handleAs="json"
+    <core-ajax id="serviceDelete" url="{{endpoint}}/{{entityid}}" handleAs="json"
                contentType="application/json"
                body="{{dataToDeleteString}}"
                method="DELETE"
