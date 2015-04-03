@@ -283,7 +283,9 @@ Fired when the `tt-crud`'s `get` the entity from server.
 //            //  this.$.toast_save_not_need.show();
 //            console.log('Diff detected, close refused !!!!')
 //        } else {
-        this.unsetEntity();
+        this.async(function() {
+          this.unsetEntity();
+        });
         this.fire('cancel', this.entity);
 //        }
       },
